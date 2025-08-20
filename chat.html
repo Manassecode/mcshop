@@ -1,0 +1,1198 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profil – Manassé Marc Quenum (Clone UI)</title>
+  <style>
+    :root{
+      --bg:#0f1115;           /* app background */
+      --card:#151923;         /* surfaces */
+      --soft:#1c2130;         /* softer surface */
+      --text:#e7ecf3;         /* primary text */
+      --muted:#a7b1c2;        /* secondary text */
+      --brand:#2477ff;        /* primary action */
+      --brand-2:#1b60cf;
+      --accent:#25d366;       /* success / progress */
+      --danger:#ef4444;       /* errors */
+      --ring: rgba(36,119,255,.35);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    html,body{height:100%}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      background:linear-gradient(180deg,#0b0d12, #0f1115 120%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    }
+    .app{max-width:560px; margin:0 auto; min-height:100%; background:transparent;}
+
+    /* ===== Top Bar ===== */
+    .topbar{position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:.5rem; padding:.6rem .9rem; background:rgba(15,17,21,.7); backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,.06)}
+    .icon-btn{width:38px; height:38px; display:grid; place-items:center; border-radius:9999px; background:var(--soft); border:1px solid rgba(255,255,255,.06); box-shadow:var(--shadow); cursor:pointer}
+    .title{font-weight:700; font-size:1rem; letter-spacing:.2px; margin-left:.25rem}
+    .spacer{flex:1}
+    .badge{position:relative}
+    .badge span{position:absolute; right:-3px; top:-3px; background:#ff3b30; color:#fff; border-radius:999px; font-size:.65rem; padding:.05rem .35rem; font-weight:700; border:2px solid #0f1115}
+
+    /* ===== Cover ===== */
+    .cover{position:relative;}
+    .cover img{width:100%; height:180px; object-fit:cover; display:block; filter:saturate(1.1)}
+    .cover::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.0) 60%, rgba(0,0,0,.45) 100%)}
+    .cover-action{position:absolute; right:12px; bottom:12px; display:flex; gap:.5rem}
+    .camera{width:40px; height:40px; display:grid; place-items:center; border-radius:999px; background:rgba(21,25,35,.85); border:1px solid rgba(255,255,255,.1); backdrop-filter:blur(6px)}
+
+    /* ===== Profile Avatar ===== */
+    .profile-header{position:relative; padding:0 14px;}
+    .avatar-wrap{position:relative; margin-top:-48px; display:flex; align-items:end; gap:12px}
+    .avatar{width:112px; height:112px; border-radius:999px; border:4px solid #0f1115; background:#222; overflow:hidden; box-shadow:0 12px 30px rgba(0,0,0,.45)}
+    .avatar img{width:100%; height:100%; object-fit:cover}
+    .avatar .mini-camera{position:absolute; bottom:2px; right:2px; width:34px; height:34px; border-radius:999px; display:grid; place-items:center; background:var(--soft); border:1px solid rgba(255,255,255,.12)}
+
+    /* ===== Name + Meta ===== */
+    .info{margin-top:.35rem}
+    .name{font-size:1.35rem; font-weight:800}
+    .meta{color:var(--muted); font-size:.92rem; display:flex; align-items:center; gap:.35rem}
+    .meta .dot{width:3px; height:3px; border-radius:999px; background:var(--muted); display:inline-block}
+
+    .faces{display:flex; gap:6px; margin:.5rem 0}
+    .faces img{width:26px; height:26px; border-radius:999px; border:2px solid #0f1115}
+
+    .role{font-size:.98rem; color:var(--muted); margin:.2rem 0 .6rem}
+
+    .link{display:block; font-size:.95rem; color:#8ab4ff; text-decoration:none; word-break:break-all; margin:.18rem 0}
+
+    /* ===== Actions ===== */
+    .actions{display:flex; gap:.6rem; margin:12px 0 6px}
+    .btn{flex:1; display:flex; align-items:center; justify-content:center; gap:.5rem; padding:.78rem .9rem; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:var(--soft); cursor:pointer; font-weight:700}
+    .btn.primary{background:linear-gradient(180deg,var(--brand),var(--brand-2)); border-color:transparent}
+    .btn.round{flex:0 0 44px; width:44px; padding:0; border-radius:12px}
+
+    /* ===== Marquee (status line) ===== */
+    .marquee{margin:14px; background:linear-gradient(180deg,#121622,#0f131e); border:1px solid rgba(255,255,255,.06); border-radius:12px; overflow:hidden}
+    .marquee .track{display:flex; gap:2rem; padding:.7rem 1rem; white-space:nowrap; will-change:transform; animation:scroll 22s linear infinite}
+    @keyframes scroll{from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ===== Cards ===== */
+    .card{margin:12px 14px; background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .card .row{display:flex; align-items:center; gap:.75rem; padding:14px}
+    .card .row + .row{border-top:1px solid rgba(255,255,255,.06)}
+    .card .title{font-weight:800}
+    .muted{color:var(--muted)}
+    .x{margin-left:auto; cursor:pointer; opacity:.8}
+
+    .progress{height:8px; background:#26304a; border-radius:999px; overflow:hidden}
+    .progress > span{display:block; height:100%; width:0}
+
+    /* ===== Footer ===== */
+    footer{padding:40px 16px 70px; color:var(--muted); text-align:center}
+
+    /* Desktop tweaks */
+    @media (min-width:560px){
+      .cover img{height:220px}
+      .name{font-size:1.6rem}
+      .role{font-size:1rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+      <button class="icon-btn" title="Retour" aria-label="Retour" onclick="history.back()">
+        <!-- back chevron -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="title">Manassé Marc Quenum</div>
+      <div class="spacer"></div>
+      <button class="icon-btn" title="Recherche" aria-label="Recherche">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+          <path d="M20 20L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="icon-btn badge" title="Notifications" aria-label="Notifications">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2ZM18 16v-5a6 6 0 1 0-12 0v5l-2 2v1h16v-1l-2-2Z" stroke="currentColor" stroke-width="1.7" fill="none"/>
+        </svg>
+        <span>9+</span>
+      </button>
+    </div>
+
+    <!-- Cover -->
+    <section class="cover">
+      <img src="https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-6/485806562_2351057431926868_1508892190962183391_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeHJmDll1Bkl95C9FJU9UpvPkvK7_fHdkXWS8rv98d2RdTBXSWGTkXWF_9cgE1Ljk1m4KMd2PQnrJRLExs3HoNXO&_nc_ohc=hIiqnc5gPU4Q7kNvwEN0k4p&_nc_oc=Adl1VtB2IUhArX-hi2jCNoCGpdxZbDlc7SNSScxnQQQ4wGYJ0rGZGEzXZEkrl9FWALM&_nc_zt=23&_nc_ht=scontent-jnb2-1.xx&_nc_gid=aD8MLYdqCHHET34xUpFbXw&oh=00_AfXbqggywzNX2GAGLQCPWvSRFarvFgRcB170sZSVIpcTkQ&oe=68A92B54" alt="Cover"/>
+      <div class="cover-action">
+        <button class="camera" title="Modifier la photo de couverture" aria-label="Modifier couverture">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="#dfe7ff" stroke-width="1.8"/>
+            <path d="M4 8h3l1.2-2h7.6L17 8h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2Z" stroke="#dfe7ff" stroke-width="1.8"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Profile Header -->
+    <section class="profile-header">
+      <div class="avatar-wrap">
+        <div class="avatar">
+          <img src="https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-1/502663735_2418917028474241_6652907109952643106_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=104&ccb=1-7&_nc_sid=1d2534&_nc_eui2=AeFLavKnnRuxPDhzvewqrM8gUF5ECYfLKadQXkQJh8sppztmedVfe8Li-4WoQBFKhy_eNv3JRy8C8nYFw8nFf7ld&_nc_ohc=U-xBs47kdUMQ7kNvwHrX8bD&_nc_oc=AdkcKtsco7CvDPsBvjsU5eyUsj8nEvrJ0A51B2J9JPULbRU6Y1qRuGz120zbm6fF1E8&_nc_zt=24&_nc_ht=scontent-jnb2-1.xx&_nc_gid=aD8MLYdqCHHET34xUpFbXw&oh=00_AfWY2S9VPPrbWhFv7yzBgA19Sa_VuCgzzYHKjQB7UlBdDQ&oe=68A92C70" alt="Avatar"/>
+          <div class="mini-camera" title="Modifier la photo de profil" aria-label="Modifier la photo de profil">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="#c9d6ff" stroke-width="1.7"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="info">
+        <div class="name">Manassé Marc Quenum</div>
+        <div class="meta">
+          <span>4,4 K followers</span>
+          <span class="dot"></span>
+          <span>1,2 K suivi(e)s</span>
+        </div>
+
+        <div class="faces">
+          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" alt="face"/>
+          <img src="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=200&auto=format&fit=crop" alt="face"/>
+          <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=200&auto=format&fit=crop" alt="face"/>
+          <img src="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=200&auto=format&fit=crop" alt="face"/>
+          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" alt="face"/>
+        </div>
+
+        <div class="role">Développeur Full‑Stack</div>
+        <a class="link" href="https://codewithmarc.onrender.com/" target="_blank" rel="noopener">https://codewithmarc.onrender.com/</a>
+        <a class="link" href="https://immopro.rf.gd/" target="_blank" rel="noopener">https://immopro.rf.gd/</a>
+
+        <div class="actions">
+          <button class="btn primary" id="dashboardBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 13h6V4H4v9Zm10 7h6V4h-6v16ZM4 20h6v-5H4v5Zm10-8h6V9h-6v3Z" fill="currentColor"/>
+            </svg>
+            Tableau de bord professionnel
+          </button>
+          <button class="btn" id="storyBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Ajouter à la story
+          </button>
+          <button class="btn round" id="moreBtn" title="Plus">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Status / Ticker line (défilement droite -> gauche) -->
+    <div class="marquee" aria-label="Fil d'actus">
+      <div class="track" id="ticker">
+        <span>🚀 Nouveaux projets MERN en ligne</span>
+        <span>•</span>
+        <span>✨ Refonte CV — UI premium disponible</span>
+        <span>•</span>
+        <span>📣 Coaching gratuit : optimisation profil</span>
+        <span>•</span>
+        <span>🛠️ Forum Immo PHP/JS/Bootstrap en cours</span>
+        <span>•</span>
+        <span>🔗 Suivez pour plus d'astuces dev</span>
+      </div>
+    </div>
+
+    <!-- Weekly Progress card -->
+    <article class="card" id="weeklyCard">
+      <div class="row">
+        <div>
+          <div class="title">Progression hebdomadaire</div>
+          <div class="muted">Réalisez les étapes de la semaine pour atteindre vos objectifs.</div>
+        </div>
+        <div class="x" id="dismissWeekly" title="Fermer" aria-label="Fermer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="row" style="align-items:stretch">
+        <div style="flex:1">
+          <div class="muted" style="margin-bottom:6px">Objectif : Obtenez 20 nouveaux followers</div>
+          <div class="progress" aria-label="Progression"><span id="progressBar"></span></div>
+          <div class="muted" id="progressText" style="margin-top:6px">0/20 followers</div>
+        </div>
+        <button class="btn" id="getFollowers" style="min-width:160px">Démarrer</button>
+      </div>
+    </article>
+
+    <!-- Placeholder content to reach bottom -->
+    <article class="card">
+      <div class="row">
+        <div>
+          <div class="title">À propos</div>
+          <div class="muted">Développeur full‑stack passionné par les interfaces propres, la performance et l’UX. Disponible pour freelancing et missions.</div>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <div class="title">Dernières activités</div>
+          <ul class="muted" style="margin:8px 0 0 18px">
+            <li>Publication : « Optimiser un forum immobilier PHP sans framework »</li>
+            <li>Live coding — mise en place d’un système de commentaires</li>
+            <li>🚧 WIP : composant d’annonces style réseaux sociaux</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <footer>
+      <div>© <span id="year"></span> Manassé Marc Quenum — Clone UI d’inspiration Facebook (usage éducatif).</div>
+    </footer>
+  </div>
+
+  <script>
+    // ===== Small helpers =====
+    const $ = (q,ctx=document)=>ctx.querySelector(q);
+
+    // Footer year
+    $('#year').textContent = new Date().getFullYear();
+
+    // Weekly card dismiss
+    $('#dismissWeekly').addEventListener('click', ()=>{
+      const el = $('#weeklyCard'); el.style.opacity='0'; el.style.transform='scale(.98)';
+      setTimeout(()=> el.remove(), 200);
+    });
+
+    // Followers goal demo
+    const bar = $('#progressBar');
+    const txt = $('#progressText');
+    const btn = $('#getFollowers');
+    let val = 0; const goal = 20;
+    function render(){
+      const pct = Math.min(100, (val/goal)*100);
+      bar.style.width = pct + '%';
+      bar.style.background = `linear-gradient(90deg, var(--accent), #7cf4b3)`;
+      txt.textContent = `${val}/${goal} followers`;
+    }
+    render();
+
+    btn.addEventListener('click', ()=>{
+      val = Math.min(goal, val + 4 + Math.floor(Math.random()*3));
+      render();
+      if(val>=goal){ btn.textContent='Objectif atteint'; btn.disabled=true; btn.style.opacity=.8; }
+    });
+
+    // Story + Dashboard + More examples
+    $('#storyBtn').addEventListener('click', ()=>alert('Ouvrir le compositeur de story…'));
+    $('#dashboardBtn').addEventListener('click', ()=>alert('Accès au tableau de bord professionnel'));
+    $('#moreBtn').addEventListener('click', (e)=>{
+      const m = document.createElement('div');
+      m.style.position='fixed'; m.style.inset='auto 12px 12px auto'; m.style.background='var(--card)';
+      m.style.border='1px solid rgba(255,255,255,.08)'; m.style.borderRadius='12px'; m.style.boxShadow='var(--shadow)'; m.style.padding='8px 0';
+      m.innerHTML = `
+        <button style="display:block;width:220px;background:none;border:0;color:var(--text);padding:10px 14px;text-align:left">Copier le lien du profil</button>
+        <button style="display:block;width:220px;background:none;border:0;color:var(--text);padding:10px 14px;text-align:left">Paramètres</button>
+      `;
+      document.body.appendChild(m);
+      const close = ()=>{ m.remove(); document.removeEventListener('click', close); };
+      setTimeout(()=>document.addEventListener('click', close), 0);
+    });
+
+    // Improve marquee for long texts (duplicate content for seamless loop)
+    const track = $('#ticker');
+    track.innerHTML = track.innerHTML + track.innerHTML; // duplicate once
+  </script>
+</body>
+</html>
+
+<style>
+    /* Section Produits - Style Premium */
+    .products-section {
+        padding: 80px 0;
+        background: linear-gradient(135deg, #f9f9f9 0%, #f1f5f9 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .products-section::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(231,76,60,0.1) 0%, rgba(231,76,60,0) 70%);
+        z-index: 0;
+    }
+
+    .section-header {
+        position: relative;
+        margin-bottom: 50px;
+        z-index: 1;
+    }
+
+    .section-header h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-header h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 4px;
+        background: var(--accent-color);
+        border-radius: 2px;
+    }
+
+    .section-header .view-all-btn {
+        position: relative;
+        padding: 10px 25px;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        font-weight: 600;
+        border-radius: 30px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        overflow: hidden;
+    }
+
+    .section-header .view-all-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(231,76,60,0.1), transparent);
+        transition: 0.5s;
+    }
+
+    .section-header .view-all-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(44,62,80,0.15);
+    }
+
+    .section-header .view-all-btn:hover::before {
+        left: 100%;
+    }
+
+    /* Carte Produit - Design Innovant */
+    .product-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+        transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        margin-bottom: 30px;
+        background: white;
+        position: relative;
+        z-index: 1;
+    }
+
+    .product-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .product-card:hover::before {
+        opacity: 1;
+    }
+
+    .product-media {
+        position: relative;
+        overflow: hidden;
+        height: 280px;
+    }
+
+    .product-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s cubic-bezier(0.25, 0.45, 0.45, 0.95);
+    }
+
+    .product-card:hover .product-img {
+        transform: scale(1.1);
+    }
+
+    .product-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: linear-gradient(45deg, var(--accent-color), #ff6b6b);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(231,76,60,0.3);
+        z-index: 2;
+    }
+
+    .product-actions {
+        position: absolute;
+        bottom: -50px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 15px;
+        background: rgba(255,255,255,0.9);
+        transition: all 0.4s;
+        opacity: 0;
+        z-index: 3;
+    }
+
+    .product-card:hover .product-actions {
+        bottom: 0;
+        opacity: 1;
+    }
+
+    .action-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 8px;
+        color: var(--secondary-color);
+        background: white;
+        border: 1px solid #eee;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .action-btn.love {
+        color: #ff6b6b;
+    }
+
+    .action-btn.share {
+        color: var(--primary-color);
+    }
+
+    .product-details {
+        padding: 20px;
+        position: relative;
+    }
+
+    .product-category {
+        font-size: 0.85rem;
+        color: #95a5a6;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+
+    .product-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        transition: color 0.3s;
+    }
+
+    .product-card:hover .product-title {
+        color: var(--accent-color);
+    }
+
+    .price-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .current-price {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--accent-color);
+        margin-right: 10px;
+    }
+
+    .old-price {
+        font-size: 1rem;
+        color: #95a5a6;
+        text-decoration: line-through;
+    }
+
+    .product-rating {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .stars {
+        color: #f1c40f;
+        margin-right: 10px;
+    }
+
+    .review-count {
+        font-size: 0.85rem;
+        color: #95a5a6;
+    }
+
+    .view-product-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        text-align: center;
+        transition: all 0.4s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .view-product-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .view-product-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(44,62,80,0.2);
+    }
+
+    .view-product-btn:hover::before {
+        left: 100%;
+    }
+
+    /* Modal Produit - Détails Premium */
+    .product-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.9);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.4s;
+    }
+
+    .product-modal.active {
+        display: flex;
+        opacity: 1;
+    }
+
+    .modal-content {
+        width: 90%;
+        max-width: 1100px;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        display: flex;
+        max-height: 90vh;
+        position: relative;
+        transform: scale(0.9);
+        transition: transform 0.4s;
+    }
+
+    .product-modal.active .modal-content {
+        transform: scale(1);
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        background: rgba(0,0,0,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 3;
+        transition: all 0.3s;
+    }
+
+    .modal-close:hover {
+        background: var(--accent-color);
+        transform: rotate(90deg);
+    }
+
+    .modal-gallery {
+        width: 50%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .gallery-main {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+    }
+
+    .gallery-main img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: opacity 0.3s;
+    }
+
+    .gallery-thumbs {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 0 20px;
+    }
+
+    .thumb-item {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 0 5px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.3s;
+    }
+
+    .thumb-item.active {
+        border-color: var(--accent-color);
+    }
+
+    .thumb-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .modal-details {
+        width: 50%;
+        padding: 40px;
+        overflow-y: auto;
+    }
+
+    .modal-category {
+        font-size: 0.9rem;
+        color: var(--accent-color);
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .modal-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin-bottom: 15px;
+    }
+
+    .modal-price {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        margin-bottom: 20px;
+    }
+
+    .modal-old-price {
+        font-size: 1.2rem;
+        color: #95a5a6;
+        text-decoration: line-through;
+        margin-left: 10px;
+    }
+
+    .modal-rating {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .modal-stars {
+        font-size: 1.2rem;
+        color: #f1c40f;
+        margin-right: 15px;
+    }
+
+    .modal-review {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+
+    .modal-description {
+        margin-bottom: 30px;
+        color: #34495e;
+        line-height: 1.7;
+    }
+
+    .modal-features {
+        margin-bottom: 30px;
+    }
+
+    .feature-item {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .feature-icon {
+        width: 24px;
+        height: 24px;
+        background: var(--light-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: var(--accent-color);
+    }
+
+    .feature-text {
+        flex: 1;
+        color: #2c3e50;
+    }
+
+    .modal-actions {
+        display: flex;
+        margin-top: 30px;
+    }
+
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+    }
+
+    .quantity-btn {
+        width: 40px;
+        height: 40px;
+        background: var(--light-color);
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .quantity-input {
+        width: 50px;
+        height: 40px;
+        text-align: center;
+        border: 1px solid #eee;
+        font-weight: 600;
+    }
+
+    .add-to-cart-btn {
+        flex: 1;
+        padding: 12px;
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .add-to-cart-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(44,62,80,0.2);
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .modal-content {
+            flex-direction: column;
+            max-height: 95vh;
+        }
+
+        .modal-gallery, .modal-details {
+            width: 100%;
+        }
+
+        .modal-gallery {
+            height: 300px;
+        }
+
+        .modal-details {
+            padding: 25px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .section-header h2 {
+            font-size: 2rem;
+        }
+
+        .product-media {
+            height: 220px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+        }
+
+        .modal-price {
+            font-size: 1.5rem;
+        }
+
+        .modal-actions {
+            flex-direction: column;
+        }
+
+        .quantity-selector {
+            margin-right: 0;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<!-- Section Produits HTML -->
+<div class="products-section">
+    <div class="container">
+        <div class="section-header row align-items-center">
+            <div class="col-md-6">
+                <h2>Nos Produits Exclusifs</h2>
+                <p class="text-muted">Découvrez des articles soigneusement sélectionnés pour vous</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="#" class="view-all-btn">Explorer la collection <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Produit 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="product-card">
+                    <div class="product-media">
+                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" 
+                             class="product-img" 
+                             alt="Montre connectée premium"
+                             data-full="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=1000&q=80">
+                        <div class="product-badge">Nouveau</div>
+                        <div class="product-actions">
+                            <div class="action-btn love" title="Ajouter aux favoris">
+                                <i class="bi bi-heart"></i>
+                            </div>
+                            <div class="action-btn share" title="Partager ce produit">
+                                <i class="bi bi-share"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <span class="product-category">Montres connectées</span>
+                        <h3 class="product-title">Chronos Elite X</h3>
+                        <div class="price-container">
+                            <span class="current-price">€599</span>
+                            <span class="old-price">€749</span>
+                        </div>
+                        <div class="product-rating">
+                            <div class="stars">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
+                            </div>
+                            <span class="review-count">(42 avis)</span>
+                        </div>
+                        <button class="view-product-btn">Voir le produit</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produit 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="product-card">
+                    <div class="product-media">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" 
+                             class="product-img" 
+                             alt="Écouteurs sans fil"
+                             data-full="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=1000&q=80">
+                        <div class="product-badge">-25%</div>
+                        <div class="product-actions">
+                            <div class="action-btn love" title="Ajouter aux favoris">
+                                <i class="bi bi-heart"></i>
+                            </div>
+                            <div class="action-btn share" title="Partager ce produit">
+                                <i class="bi bi-share"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <span class="product-category">Audio</span>
+                        <h3 class="product-title">Harmony Pro 3</h3>
+                        <div class="price-container">
+                            <span class="current-price">€199</span>
+                            <span class="old-price">€265</span>
+                        </div>
+                        <div class="product-rating">
+                            <div class="stars">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star"></i>
+                            </div>
+                            <span class="review-count">(28 avis)</span>
+                        </div>
+                        <button class="view-product-btn">Voir le produit</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produit 3 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="product-card">
+                    <div class="product-media">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" 
+                             class="product-img" 
+                             alt="Chaussures de sport"
+                             data-full="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=1000&q=80">
+                        <div class="product-badge">Bestseller</div>
+                        <div class="product-actions">
+                            <div class="action-btn love" title="Ajouter aux favoris">
+                                <i class="bi bi-heart"></i>
+                            </div>
+                            <div class="action-btn share" title="Partager ce produit">
+                                <i class="bi bi-share"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <span class="product-category">Chaussures</span>
+                        <h3 class="product-title">AeroRun Ultra</h3>
+                        <div class="price-container">
+                            <span class="current-price">€129</span>
+                            <span class="old-price">€159</span>
+                        </div>
+                        <div class="product-rating">
+                            <div class="stars">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <span class="review-count">(156 avis)</span>
+                        </div>
+                        <button class="view-product-btn">Voir le produit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="mt-5">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Modal Produit -->
+<div class="product-modal">
+    <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <div class="modal-gallery">
+            <div class="gallery-main">
+                <img src="" alt="" id="modal-main-img">
+            </div>
+            <div class="gallery-thumbs">
+                <!-- Les miniatures seront ajoutées dynamiquement -->
+            </div>
+        </div>
+        <div class="modal-details">
+            <span class="modal-category" id="modal-category">Montres connectées</span>
+            <h2 class="modal-title" id="modal-title">Chronos Elite X</h2>
+            <div class="modal-price">
+                <span id="modal-price">€599</span>
+                <span class="modal-old-price" id="modal-old-price">€749</span>
+            </div>
+            <div class="modal-rating">
+                <div class="modal-stars">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-half"></i>
+                </div>
+                <span class="modal-review">42 avis</span>
+            </div>
+            <p class="modal-description">
+                La montre Chronos Elite X redéfinit l'expérience des montres connectées avec son écran AMOLED haute résolution, 
+                une autonomie de 14 jours et des fonctionnalités de suivi santé avancées. Conçue pour les professionnels exigeants 
+                et les athlètes passionnés.
+            </p>
+            <div class="modal-features">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <div class="feature-text">
+                        Écran AMOLED 1.4" toujours allumé avec revêtement anti-rayures
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <div class="feature-text">
+                        Suivi précis du rythme cardiaque et de la SpO2 24/7
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <div class="feature-text">
+                        Résistance à l'eau 5ATM - idéale pour la natation
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <div class="feature-text">
+                        GPS intégré avec cartes hors ligne pour les randonnées
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <div class="quantity-selector">
+                    <button class="quantity-btn minus">-</button>
+                    <input type="number" class="quantity-input" value="1" min="1">
+                    <button class="quantity-btn plus">+</button>
+                </div>
+                <button class="add-to-cart-btn">
+                    <i class="bi bi-cart-plus"></i> Ajouter au panier
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Script pour gérer l'ouverture du modal produit
+    document.addEventListener('DOMContentLoaded', function() {
+        const productCards = document.querySelectorAll('.product-card');
+        const productModal = document.querySelector('.product-modal');
+        const modalClose = document.querySelector('.modal-close');
+        
+        // Ouvrir le modal quand on clique sur un produit
+        productCards.forEach(card => {
+            const img = card.querySelector('.product-img');
+            const btn = card.querySelector('.view-product-btn');
+            
+            const openModal = () => {
+                // Récupérer les données du produit
+                const category = card.querySelector('.product-category').textContent;
+                const title = card.querySelector('.product-title').textContent;
+                const price = card.querySelector('.current-price').textContent;
+                const oldPrice = card.querySelector('.old-price').textContent;
+                const rating = card.querySelector('.stars').innerHTML;
+                const mainImage = img.getAttribute('data-full');
+                
+                // Mettre à jour le modal avec les données
+                document.getElementById('modal-category').textContent = category;
+                document.getElementById('modal-title').textContent = title;
+                document.getElementById('modal-price').textContent = price;
+                document.getElementById('modal-old-price').textContent = oldPrice;
+                document.querySelector('.modal-stars').innerHTML = rating;
+                document.getElementById('modal-main-img').setAttribute('src', mainImage);
+                
+                // Afficher le modal
+                productModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+            
+            img.addEventListener('click', openModal);
+            btn.addEventListener('click', openModal);
+        });
+        
+        // Fermer le modal
+        modalClose.addEventListener('click', () => {
+            productModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Gestion des quantités
+        const minusBtn = document.querySelector('.quantity-btn.minus');
+        const plusBtn = document.querySelector('.quantity-btn.plus');
+        const quantityInput = document.querySelector('.quantity-input');
+        
+        minusBtn.addEventListener('click', () => {
+            let value = parseInt(quantityInput.value);
+            if (value > 1) {
+                quantityInput.value = value - 1;
+            }
+        });
+        
+        plusBtn.addEventListener('click', () => {
+            let value = parseInt(quantityInput.value);
+            quantityInput.value = value + 1;
+        });
+    });
+</script>
