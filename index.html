@@ -1878,7 +1878,7 @@ body {
                             <div class="action-btn love" title="Ajouter aux favoris">
                                 <i class="bi bi-heart"></i>
                             </div>
-                            <div class="action-btn share" title="Partager ce produit">
+                            <div class="action-btn share" title="Partager ce produit" data-product-id="chronos-elite-x">
                                 <i class="bi bi-share"></i>
                             </div>
                         </div>
@@ -1918,7 +1918,7 @@ body {
                             <div class="action-btn love" title="Ajouter aux favoris">
                                 <i class="bi bi-heart"></i>
                             </div>
-                            <div class="action-btn share" title="Partager ce produit">
+                            <div class="action-btn share" title="Partager ce produit" data-product-id="harmony-pro-3">
                                 <i class="bi bi-share"></i>
                             </div>
                         </div>
@@ -1958,7 +1958,7 @@ body {
                             <div class="action-btn love" title="Ajouter aux favoris">
                                 <i class="bi bi-heart"></i>
                             </div>
-                            <div class="action-btn share" title="Partager ce produit">
+                            <div class="action-btn share" title="Partager ce produit" data-product-id="aerorun-ultra">
                                 <i class="bi bi-share"></i>
                             </div>
                         </div>
@@ -2365,8 +2365,6 @@ body {
     const lightboxImage = document.querySelector('.lightbox-image');
     const lightboxPrev = document.querySelector('.lightbox-nav.prev');
     const lightboxNext = document.querySelector('.lightbox-nav.next');
-    const shareOverlay = document.querySelector('.share-overlay');
-    const shareClose = document.querySelector('.share-close');
     
     // Stocker les produits favoris dans localStorage
     if (!localStorage.getItem('favoriteProducts')) {
@@ -2540,240 +2538,33 @@ body {
         });
     }
     
-    // Gestion du partage
+    // Fonction de partage simplifiée
+    function shareAnnonce(title, image, url) {
+        const fullUrl = window.location.origin + '/' + url;
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                text: 'Découvrez cette annonce sur notre site',
+                url: fullUrl
+            }).catch(error => {
+                console.error('Partage annulé ou échoué:', error);
+            });
+        } else {
+            const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fullUrl)}`;
+            window.open(shareUrl, '_blank');
+        }
+    }
+
+    // Gestion des boutons de partage
     const shareButtons = document.querySelectorAll('.action-btn.share');
-    const copyLinkBtn = document.getElementById('copy-link-btn');
-    const shareLinkInput = document.getElementById('share-link-input');
-    const shareLinkCopy = document.getElementById('share-link-copy');
-    
     shareButtons.forEach(button => {
         button.addEventListener('click', function() {
             const productCard = this.closest('.product-card');
-            const productTitle = productCard.querySelector('.product-title').textContent;
-            const productUrl = window.location.href.split('?')[0] + '?product=' + encodeURIComponent(productTitle);
+            const title = productCard.querySelector('.product-title').textContent;
+            const image = productCard.querySelector('.product-img').src;
+            const url = 'produits/' + title.toLowerCase().replace(/\s+/g, '-');
             
-            // Mettre à jour le lien de partage
-            shareLinkInput.value = productUrl;
-            
-            // Ouvrir l'overlay de partage
-            shareOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-    });
-    
-    // Fermer l'overlay de partage
-    shareClose.addEventListener('click', () => {
-        shareOverlay.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
-    
-    // Options de partage
-    const shareOptions = document.querySelectorAll('.share-option[data-share]');
-    
-    shareOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            const platform = this.getAttribute('data-share');
-            const url = shareLinkInput.value;
-            const title = document.querySelector('.modal-title').textContent;
-            
-            switch(platform) {
-                case 'facebook':
-                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
-                    break;
-                case 'twitter':
-                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, '_blank');
-                    break;
-                case 'whatsapp':
-                    window.open(`https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`, '_blank');
-                    break;
-                case 'email':
-                    window.open(`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`, '_blank');
-                    break;
-            }
-        });
-    });
-    
-    // Copier le lien
-    copyLinkBtn.addEventListener('click', function() {
-        shareLinkInput.select();
-        document.execCommand('copy');
-        
-        // Afficher un feedback
-        const originalText = this.innerHTML;
-        this.innerHTML = '<i class="bi bi-check-lg"></i> Lien copié';
-        
-        setTimeout(() => {
-            this.innerHTML = originalText;
-        }, 2000);
-    });
-    
-    shareLinkCopy.addEventListener('click', function() {
-        shareLinkInput.select();
-        document.execCommand('copy');
-        
-        // Afficher un feedback
-        const originalText = this.textContent;
-        this.textContent = 'Copié!';
-        
-        setTimeout(() => {
-            this.textContent = originalText;
-        }, 2000);
-    });
-
-    // Ajout du nouveau code pour le partage étendu
-    document.addEventListener('DOMContentLoaded', function() {
-        // Variables globales
-        const shareOverlay = document.querySelector('.share-overlay');
-        const shareClose = document.querySelector('.share-close');
-        const shareButtons = document.querySelectorAll('.action-btn.share');
-        const copyLinkBtn = document.getElementById('copy-link-btn');
-        const shareLinkInput = document.getElementById('share-link-input');
-        const shareLinkCopy = document.getElementById('share-link-copy');
-        const shareNativeBtn = document.getElementById('share-native-btn');
-
-        // Gestion du partage
-        shareButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const productCard = this.closest('.product-card');
-                const productTitle = productCard.querySelector('.product-title').textContent;
-                const productUrl = window.location.href.split('?')[0] + '?product=' + encodeURIComponent(productTitle);
-                
-                // Mettre à jour le lien de partage
-                shareLinkInput.value = productUrl;
-                
-                // Ouvrir l'overlay de partage
-                shareOverlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-        });
-
-        // Fermer l'overlay de partage
-        shareClose.addEventListener('click', () => {
-            shareOverlay.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-
-        // Options de partage spécifiques
-        const shareOptions = document.querySelectorAll('.share-option[data-share]');
-        
-        shareOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                const platform = this.getAttribute('data-share');
-                const url = shareLinkInput.value;
-                const title = "Regardez ce produit: " + document.querySelector('.modal-title').textContent;
-                
-                switch(platform) {
-                    case 'facebook':
-                        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
-                        break;
-                    case 'twitter':
-                        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, '_blank');
-                        break;
-                    case 'whatsapp':
-                        window.open(`https://wa.me/?text=${encodeURIComponent(title + '\n' + url)}`, '_blank');
-                        break;
-                    case 'telegram':
-                        window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`, '_blank');
-                        break;
-                    case 'linkedin':
-                        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
-                        break;
-                    case 'email':
-                        window.open(`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`, '_blank');
-                        break;
-                }
-            });
-        });
-
-        // Partage natif (pour autres applications)
-        shareNativeBtn.addEventListener('click', function() {
-            const url = shareLinkInput.value;
-            const title = "Regardez ce produit: " + document.querySelector('.modal-title').textContent;
-            const text = "Je voulais partager ce produit avec vous : " + title;
-            
-            console.log("Tentative de partage natif...");
-            console.log("Platform:", navigator.platform);
-            console.log("UserAgent:", navigator.userAgent);
-            
-            if (navigator.share) {
-                console.log("API Web Share disponible");
-                navigator.share({
-                    title: title,
-                    text: text,
-                    url: url
-                }).then(() => {
-                    console.log("Partage réussi");
-                }).catch(err => {
-                    console.log('Erreur de partage:', err);
-                    if (err.name === 'AbortError') {
-                        console.log("L'utilisateur a annulé le partage");
-                    } else {
-                        fallbackShareDialog();
-                    }
-                });
-            } else {
-                console.log("API Web Share non disponible - Fallback");
-                fallbackShareDialog();
-            }
-            
-            function fallbackShareDialog() {
-                console.log("Exécution du fallback...");
-                
-                // Solution pour mobile
-                if (/android|iphone|ipad|mobile/i.test(navigator.userAgent)) {
-                    console.log("Mobile détecté - Tentative WhatsApp");
-                    window.open(`whatsapp://send?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
-                } 
-                // Solution pour Telegram
-                else if (/telegram|tg/i.test(navigator.userAgent)) {
-                    window.open(`tg://msg_url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
-                }
-                // Solution générale
-                else {
-                    console.log("Desktop détecté - Copie dans presse-papier");
-                    copyToClipboardWithFeedback(url);
-                }
-            }
-            
-            function copyToClipboardWithFeedback(text) {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert('Lien copié ! Vous pouvez maintenant le coller dans n\'importe quelle application.\n\n' + text);
-                }).catch(err => {
-                    console.error('Erreur copie:', err);
-                    // Fallback ultra basique si même clipboard API échoue
-                    shareLinkInput.select();
-                    document.execCommand('copy');
-                    alert('Lien copié ! Collez-le où vous voulez.');
-                });
-            }
-        });
-
-        // Copier le lien (bouton principal)
-        copyLinkBtn.addEventListener('click', function() {
-            shareLinkInput.select();
-            document.execCommand('copy');
-            
-            // Afficher un feedback
-            const originalText = this.innerHTML;
-            this.innerHTML = '<i class="bi bi-check-lg"></i> Lien copié';
-            
-            setTimeout(() => {
-                this.innerHTML = originalText;
-            }, 2000);
-        });
-
-        // Copier le lien (bouton secondaire)
-        shareLinkCopy.addEventListener('click', function() {
-            shareLinkInput.select();
-            document.execCommand('copy');
-            
-            // Afficher un feedback
-            const originalText = this.textContent;
-            this.textContent = 'Copié!';
-            
-            setTimeout(() => {
-                this.textContent = originalText;
-            }, 2000);
+            shareAnnonce(title, image, url);
         });
     });
 });
@@ -2781,6 +2572,7 @@ body {
 
 </body>
 </html>
+
 
 
 
