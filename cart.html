@@ -511,55 +511,70 @@
         }
 
         /* Responsive - NOUVEAUX STYLES POUR MOBILE */
-        .desktop-menu {
-            display: none !important;
-        }
-        
-        .mobile-menu {
-            display: flex !important;
-        }
-        
-        .search-container {
-            margin-right: 0;
-            margin-left: 0;
-            width: 100%;
-            order: 3;
-            margin-top: 15px;
-        }
-        
-        .search-box {
-            width: 100%;
-        }
-        
-        .search-box:focus {
-            width: 100%;
-        }
-        
-        .nav-mobile-container {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .mobile-menu .nav-link {
-            width: 45px;
-            height: 45px;
-            margin: 0 5px;
-        }
-        
-        .mobile-menu .nav-link i {
-            font-size: 1.2rem;
-        }
-        
-        .nav-icon {
-            width: 45px;
-            height: 45px;
-            margin-left: 8px;
-        }
-        
-        .nav-icon i {
-            font-size: 1.2rem;
-        }
+        @media (max-width: 992px) {
+            .desktop-menu {
+                display: none !important;
+            }
+            
+            .mobile-menu {
+                display: flex !important;
+            }
+            
+            .search-container {
+                margin-right: 0;
+                margin-left: 0;
+                width: 100%;
+                order: 3;
+                margin-top: 15px;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .search-box:focus {
+                width: 100%;
+            }
+            
+            .nav-mobile-container {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                flex-wrap: nowrap;
+                width: auto;
+                margin-left: auto;
+            }
+            
+            .mobile-menu .nav-link {
+                width: 45px;
+                height: 45px;
+                margin: 0 5px;
+            }
+            
+            .mobile-menu .nav-link i {
+                font-size: 1.2rem;
+            }
+            
+            .nav-icon {
+                width: 45px;
+                height: 45px;
+                margin-left: 8px;
+            }
+            
+            .nav-icon i {
+                font-size: 1.2rem;
+            }
+            
+            .navbar .container {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+            }
+            
+            .navbar-brand {
+                margin-right: auto;
+                white-space: nowrap;
+            }
             
             .cart-item-img {
                 width: 100px;
@@ -912,7 +927,7 @@
                     category: "Audio",
                     price: 8000,
                     quantity: 2,
-                    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZuctHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+                    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
                     badge: "Nouveau"
                 }
             ];
