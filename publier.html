@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Créer une publication - Mc CHAT</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <!-- Google Fonts pour Pacifico -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <!-- Icônes fontawesome -->
+  <script src="https://kit.fontawesome.com/4b37c1234d.js" crossorigin="anonymous"></script>
+  
+  <style>
+    :root{
+      --fb-blue:#1877F2;
+      --text:#1c1e21;
+      --muted:#65676b;
+      --line:#e5e6eb;
+      --surface:#ffffff;
+      --bg:#f0f2f5;
+      --pure-blue: #1877F2;
+      --dark-bg: #222;
+      --nav-icon: #fff;
+      --story-border: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      background:var(--surface);
+      font: 16px/1.25 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+    }
+
+    /* Top Bar */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      z-index: 1000;
+      height: 50px; /* Hauteur fixe pour le topbar */
+    }
+    .logo{display:flex;align-items:center;gap:6px}
+    .logo svg{height:30px}
+    .logo-text {
+      font-family: 'Lobster', cursive;
+      font-size: 26px;
+      font-weight: 700;
+      background: var(--story-border);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    header a{
+      text-decoration: none;
+    }
+    .icons{display:flex;align-items:center;gap:16px}
+    .icon-btn{position:relative;display:grid;place-items:center;width:28px;height:28px;cursor:pointer;background:none;border:none;color:#262626;transition: all 0.3s ease;}
+    .icon-btn:hover {transform: scale(1.15);}
+    .badge{position:absolute;top:-2px;right:-2px;background:#ff3b30;color:#fff;border-radius:999px;padding:0 5px;line-height:16px;font-size:11px;font-weight:700;border:2px solid #fff}
+
+    /* App Bar */
+    .appbar {
+      top: 50px; /* Décalage égal à la hauteur du topbar */
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      margin-top: 50px; /* Ajout d'une marge pour pousser le contenu vers le bas */
+    }
+    .title{font-size:18px; font-weight:700; margin:0; flex:1}
+    .appbar-icon-btn{
+      display:grid; place-items:center;
+      width:36px; height:36px; border-radius:18px;
+      border:none; background:transparent; color:#050505; cursor:pointer;
+    }
+    .appbar-icon-btn:active{background:#e4e6eb}
+    .link-btn{
+      background:transparent; border:none; color:var(--pure-blue);
+      font-weight:700; font-size:14px; letter-spacing:.2px; cursor:pointer;
+    }
+
+    /* Page */
+    .page {
+      padding: 12px;
+    }
+
+
+    /* Author */
+    .author{display:flex; gap:10px; align-items:center; margin-bottom:10px}
+    .avatar{width:48px;height:48px;border-radius:50%;object-fit:cover}
+    .author-meta{display:flex;flex-direction:column;gap:6px}
+    .name{font-weight:700;font-size:16px}
+    
+    /* Audience Select */
+    .audience-select {
+      position: relative;
+      display: inline-block;
+      min-width: 120px;
+    }
+    .audience-select select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      width: 100%;
+      padding: 6px 30px 6px 10px;
+      border: 1px solid #dddfe2;
+      border-radius: 6px;
+      background-color: #f5f6f7;
+      font-size: 13px;
+      cursor: pointer;
+      outline: none;
+    }
+    .audience-select::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid #65676b;
+      pointer-events: none;
+    }
+    .audience-select select:focus {
+      border-color: var(--pure-blue);
+      background-color: #e7f3ff;
+    }
+
+    /* Composer */
+    .composer {
+      margin: 8px 0 6px; /* Conserve les marges verticales */
+      min-height: 160px; /* Ajusté pour correspondre à la nouvelle hauteur */
+      transition: all 0.3s ease;
+    }
+    #postText{
+      width:100%; 
+      min-height:200px; 
+      border:2px solid #d1d1d6; 
+      resize:none; 
+      outline:none;
+      font-size:24px; 
+      line-height:1.35; 
+      padding:16px; 
+      background:transparent;
+      border-radius:12px;
+      transition:all 0.3s ease;
+      overflow:hidden;
+    }
+    #postText:focus{
+      border-color:#1877F2;
+      box-shadow:0 0 0 2px rgba(24,119,242,0.2);
+    }
+    #postText.centered {
+      text-align: center;
+      font-weight: 600;
+    }
+    #postText::placeholder{
+      color:#8d8f94;
+      transition: color 0.3s ease;
+    }
+    #postText.centered::placeholder {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+    #postText::selection {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Character counter */
+    .char-counter {
+      position: absolute;
+      right: 15px;
+      bottom: 15px;
+      font-size: 14px;
+      color: #65676b;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 2px 6px;
+      border-radius: 10px;
+      display: none;
+    }
+    .char-counter.limit-reached {
+      color: #e41e3f;
+      font-weight: bold;
+    }
+
+    /* BG presets strip */
+    .bg-strip{
+      display:flex; 
+      gap:10px; 
+      padding:10px 0 8px 10px; 
+      overflow-x: auto;
+      margin-bottom: 15px;
+      scrollbar-width: none;  /* Firefox */
+      -ms-overflow-style: none;  /* IE and Edge */
+      transition: all 0.3s ease;
+      max-height: 60px;
+    }
+    .bg-strip.hidden {
+      opacity: 0;
+      max-height: 0;
+      margin-bottom: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    .bg-strip::-webkit-scrollbar {
+      display: none;  /* Chrome, Safari and Opera */
+    }
+    .chip{
+      min-width:44px; height:44px; border-radius:10px; border:1px solid var(--line);
+      background:#fff; cursor:pointer; flex:0 0 auto;
+      transition: all 0.2s ease;
+    }
+    .chip:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .chip.selected{
+      outline:2px solid var(--pure-blue); 
+      outline-offset:2px;
+      transform: scale(1.05);
+    }
+    .chip[data-bg="#111111"]{background:#111}
+    .chip[data-bg="#e41e3f"]{background:#e41e3f}
+    .chip[data-bg="#b400ff"]{background:#b400ff}
+    .chip[data-bg="#1877F2"]{background:#1877F2}
+    .chip[data-bg="#45bd62"]{background:#45bd62}
+    .chip[data-bg="#f7b928"]{background:#f7b928}
+    .chip[data-bg="gradient-1"]{background:linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d)}
+    .chip[data-bg="gradient-2"]{background:linear-gradient(135deg,#7928ca,#ff0080)}
+    .chip[data-bg="gradient-3"]{background:linear-gradient(135deg,#0072ff,#00c6ff)}
+    .chip[data-bg="gradient-4"]{background:linear-gradient(135deg,#f46b45,#eea849)}
+    .chip[data-bg="gradient-5"]{background:linear-gradient(135deg,#834d9b,#d04ed6)}
+    .chip[data-bg="pattern-1"]{
+      background: 
+        linear-gradient(45deg, #92bde380 25%, transparent 25%, transparent 75%, #92bde380 75%, #92bde380),
+        linear-gradient(45deg, #92bde380 25%, transparent 25%, transparent 75%, #92bde380 75%, #92bde380);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+    }
+    .chip[data-bg="pattern-2"]{
+      background-color:#0093E9;
+      background-image:radial-gradient(circle at 10% 20%, rgba(0, 147, 233, 0.8) 0%, rgba(128, 208, 199, 0.8) 90%);
+    }
+    .chip-preview{
+      background:
+        linear-gradient(180deg,#fff8, #fff0),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='56'%3E%3Crect width='80' height='56' rx='8' fill='%23f0f2f5'/%3E%3C/svg%3E") center/cover no-repeat;
+    }
+
+    /* Actions */
+    .actions{
+      margin-top:4px; 
+      border-top:1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .action{
+      display:flex; align-items:center; gap:12px;
+      width:100%; background:transparent; border:none; text-align:left;
+      padding:12px 16px; border-bottom:1px solid var(--line); cursor:pointer;
+      font-size:15px;
+      transition: all 0.2s ease;
+    }
+    .action:hover {
+      background-color: #f7f8fa;
+    }
+    .action:last-child {
+      border-bottom: none;
+    }
+    .ico{
+      display:grid; place-items:center; width:32px; height:32px; border-radius:8px;
+      color:#fff;
+      font-size: 16px;
+    }
+    .ico.wrap{background:#45bd62}
+    .ico.blue{background:#1877f2}
+    .ico.red{background:#f5533d}
+    .ico.yellow{background:#f7b928; color:#222}
+    .ico.messenger{background:#0099ff}
+    .ico.calendar{background:#f7b928; color:#222}
+    .ico.live{background:#e74c3c}
+    .ico.purple{background:#8a3ab9}
+
+    /* Bottom bar */
+    .bottom-bar{
+      position:sticky; bottom:0; background:var(--surface);
+      border-top:1px solid var(--line); padding:12px;
+    }
+    .btn-primary{
+      width:100%; padding:12px 16px; border:none; border-radius:8px;
+      background:var(--pure-blue); color:#fff; font-weight:700; font-size:16px;
+      cursor:pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: #0e6de9;
+      transform: translateY(-1px);
+    }
+    .btn-primary:disabled{background:#b0c7fb; cursor:not-allowed}
+
+    /* Popover */
+    .popover{
+      position:fixed; left:12px; right:12px; top:70px;
+      background:#fff; border:1px solid var(--line); border-radius:12px;
+      box-shadow:0 8px 24px rgba(0,0,0,.12); padding:8px;
+      z-index: 1000;
+    }
+    .pop-item{
+      display:block; width:100%; text-align:left; padding:10px 12px;
+      background:#fff; border:none; border-radius:8px; font-size:14px; cursor:pointer;
+    }
+    .pop-item+.pop-item{margin-top:6px}
+    .pop-item:hover{background:#f0f2f5}
+    .pop-item.selected{outline:2px solid #dbe7ff}
+    
+    /* Media preview - NOUVEAU STYLE */
+    .media-preview {
+      margin-top: 15px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+    }
+
+    .slider-container {
+      position: relative;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .slider {
+      display: flex;
+      overflow-x: auto;
+      gap: 16px;
+      padding: 18px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      cursor: grab;
+    }
+
+    .slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slider:active {
+      cursor: grabbing;
+    }
+
+    .slide-item {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      flex-shrink: 0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      scroll-snap-align: start;
+    }
+
+    .slide-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .slide-item img,
+    .slide-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Icônes en haut à droite */
+    .slide-actions {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .slide-item:hover .slide-actions {
+      opacity: 1;
+    }
+
+    .slide-actions button {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      color: #2c3e50;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s ease;
+    }
+
+    .slide-actions button:hover {
+      background: #fff;
+      transform: scale(1.1);
+    }
+
+    /* Durée de la vidéo */
+    .video-duration {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+    
+    /* Custom file input */
+    .file-input {
+      display: none;
+    }
+    
+    /* Tagging styles */
+    .tagged-users {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .tag-badge {
+      background-color: #e7f3ff;
+      color: var(--fb-blue);
+      padding: 4px 8px;
+      border-radius: 16px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    /* Location selector */
+    .location-search {
+      margin-top: 10px;
+      position: relative;
+    }
+    .location-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+    .location-item {
+      padding: 10px 15px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+    .location-item:hover {
+      background-color: #f5f6f7;
+    }
+    
+    /* Feeling/Activity selector */
+    .feeling-selector {
+      margin-top: 10px;
+    }
+    .feeling-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .feeling-option {
+      padding: 10px;
+      text-align: center;
+      border-radius: 8px;
+      border: 1px solid #e4e6eb;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .feeling-option:hover {
+      background-color: #f5f6f7;
+    }
+    
+    /* Modal customizations */
+    .modal-content {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .modal-header {
+      border-bottom: 1px solid var(--line);
+    }
+    .modal-footer {
+      border-top: 1px solid var(--line);
+    }
+    
+    /* Bottom Nav */
+    .bottombar{
+      margin-top:auto;
+      border-top:1px solid #333;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 18px;
+      position:sticky;
+      bottom:0;
+      background: var(--dark-bg);
+      z-index: 5;
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--nav-icon);
+      text-decoration: none;
+      width: 28px;
+      height: 28px;
+      transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+      color: #fff;
+      transform: scale(1.15);
+    }
+    .nav-link i {
+      font-size: 20px;
+    }
+    .profile-link {
+      display: block;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .profile-link:hover {
+      transform: scale(1.1);
+    }
+    .profile-thumb {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    .profile-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Instructions */
+    .instructions {
+      text-align: center;
+      margin-top: 15px;
+      color: #6c757d;
+      font-size: 14px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <a href="#" class="logo" aria-label="Mc CHAT">
+      <span class="logo-text">Mc CHAT</span>
+    </a>
+    <div class="icons">
+      <a href="index.html" class="icon-btn" aria-label="Boutique">
+        <i class="bi bi-bag fs-5"></i>
+      </a>
+      <a href="#" class="icon-btn" aria-label="Notifications">
+        <i class="bi bi-heart fs-5"></i>
+      </a>
+      <a href="#" class="icon-btn" aria-label="Messages">
+        <span class="badge" aria-hidden="true">1</span>
+        <i class="bi bi-chat fs-5"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- Top App Bar -->
+  <header class="appbar">
+    <button class="appbar-icon-btn" aria-label="Retour" id="btnBack">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15.5 19.5 8 12l7.5-7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <h1 class="title">Créer une publication</h1>
+    <button class="link-btn" id="btnTopPublish">PUBLIER</button>
+  </header>
+
+  <main class="page">
+    <!-- Author / Audience -->
+    <section class="author">
+      <img class="avatar" src="https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-6/536284504_122189406446293698_8378425851294015744_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGvjC78z6dkc_NY2ilxhy6iPxTHL4pWEyY_FMcvilYTJhgcw9g3I009Nv876GZW2-hH-gyEZSKKHrGTZfpS_joP&_nc_ohc=H1bjPUMTC0sQ7kNvwENwmO8&_nc_oc=AdmYhyBq_cmg73sdOt2kULZZVt_4w97zERfCCmkzDaJA0ypNI1CQSL6aAINXXIyvNDY&_nc_zt=23&_nc_ht=scontent-jnb2-1.xx&_nc_gid=v4J5wpqOYIfA7O4UlZawTg&oh=00_AfUsfkJVFek8hvVA9N1yEV7qTLxEvuKC2ZjlHHp7NNgeiw&oe=68AA3A45" alt="Photo de profil" />
+      <div class="author-meta">
+        <div class="name">Manassé Marc Quenum</div>
+        <div class="audience-select">
+          <select id="audienceSelect">
+            <option value="public" selected>🌍 Public</option>
+            <option value="friends">👥 Amis</option>
+            <option value="followers">👤 Abonnés</option>
+            <option value="only-me">🔒 Moi uniquement</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Composer -->
+    <section class="composer">
+      <textarea id="postText" placeholder="À quoi pensez-vous ?" rows="1"></textarea>
+      <div class="char-counter" id="charCounter">0/80</div>
+    </section>
+    
+    <!-- Media preview - NOUVEAU DESIGN -->
+    <div class="media-preview" id="mediaPreview">
+      <div class="slider-container">
+        <div class="slider" id="customSlider">
+          <!-- Les médias seront ajoutés dynamiquement ici -->
+        </div>
+      </div>
+      <p class="instructions" id="mediaInstructions" style="display: none;">Faites glisser pour naviguer • Survolez les éléments pour voir les actions</p>
+    </div>
+    
+    <!-- Tagged users -->
+    <div class="tagged-users" id="taggedUsers"></div>
+
+    <!-- Background presets -->
+    <section class="bg-strip" id="bgStrip">
+      <button class="chip selected" data-bg="none" title="Aucun fond"></button>
+      <button class="chip" data-bg="#1877F2" title="Bleu"></button>
+      <button class="chip" data-bg="#45bd62" title="Vert"></button>
+      <button class="chip" data-bg="#f7b928" title="Jaune"></button>
+      <button class="chip" data-bg="#b400ff" title="Violet"></button>
+      <button class="chip" data-bg="#e41e3f" title="Rouge"></button>
+      <button class="chip" data-bg="#111111" title="Noir"></button>
+      <button class="chip" data-bg="gradient-1" title="Dégradé 1"></button>
+      <button class="chip" data-bg="gradient-2" title="Dégradé 2"></button>
+      <button class="chip" data-bg="gradient-3" title="Dégradé bleu"></button>
+      <button class="chip" data-bg="gradient-4" title="Dégradé orange"></button>
+      <button class="chip" data-bg="gradient-5" title="Dégradé violet"></button>
+      <button class="chip" data-bg="pattern-1" title="Motif 1"></button>
+      <button class="chip" data-bg="pattern-2" title="Motif 2"></button>
+    </section>
+
+    <!-- Action list -->
+    <nav class="actions">
+      <label class="action" for="mediaInput">
+        <span class="ico wrap"><i class="bi bi-image"></i></span>
+        <span>Photos/Vidéos</span>
+      </label>
+      <input type="file" id="mediaInput" class="file-input" accept="image/*,video/*" multiple>
+      <button class="action" data-bs-toggle="modal" data-bs-target="#tagPeopleModal">
+        <span class="ico blue"><i class="bi bi-person-plus"></i></span>
+        <span>Identifier des personnes</span>
+      </button>
+      <button class="action" data-bs-toggle="modal" data-bs-target="#locationModal">
+        <span class="ico red"><i class="bi bi-geo-alt"></i></span>
+        <span>Ajouter un lieu</span>
+      </button>
+      <button class="action" data-bs-toggle="modal" data-bs-target="#feelingModal">
+        <span class="ico yellow"><i class="bi bi-emoji-smile"></i></span>
+        <span>Humeur/Activité</span>
+      </button>
+      <button class="action">
+        <span class="ico messenger"><i class="bi bi-chat-dots"></i></span>
+        <span>Recevoir des messages</span>
+      </button>
+      <button class="action">
+        <span class="ico calendar"><i class="bi bi-calendar-event"></i></span>
+        <span>Créer un évènement</span>
+      </button>
+      <button class="action">
+        <span class="ico purple"><i class="bi bi-gift"></i></span>
+        <span>Demander un cadeau</span>
+      </button>
+      <button class="action">
+        <span class="ico live"><i class="bi bi-camera-video"></i></span>
+        <span>Lancer un direct</span>
+      </button>
+    </nav>
+  </main>
+
+  <!-- Bottom Publish Bar -->
+  <div class="bottom-bar">
+    <button class="btn-primary" id="btnBottomPublish">PUBLIER</button>
+  </div>
+  
+  <!-- Bottom Navigation -->
+  <nav class="bottombar" aria-label="Barre d'onglets">
+    <a href="home.html" class="nav-link" aria-label="Accueil">
+      <i class="bi bi-house-door"></i>
+    </a>
+    <a href="#" class="nav-link" aria-label="Recherche">
+      <i class="bi bi-search"></i>
+    </a>
+    <a href="publier.html" class="nav-link" aria-label="Créer">
+      <i class="bi bi-plus-square-fill"></i>
+    </a>
+    <a href="#" class="nav-link" aria-label="Reels">
+      <i class="bi bi-play-btn"></i>
+    </a>
+    <a href="#" class="profile-link" aria-label="Profil">
+      <div class="profile-thumb">
+        <img src="https://scontent-jnb2-1.xx.fbcdn.net/v/t39.30808-6/536284504_122189406446293698_8378425851294015744_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGvjC78z6dkc_NY2ilxhy6iPxTHL4pWEyY_FMcvilYTJhgcw9g3I009Nv876GZW2-hH-gyEZSKKHrGTZfpS_joP&_nc_ohc=H1bjPUMTC0sQ7kNvwENwmO8&_nc_oc=AdmYhyBq_cmg73sdOt2kULZZVt_4w97zERfCCmkzDaJA0ypNI1CQSL6aAINXXIyvNDY&_nc_zt=23&_nc_ht=scontent-jnb2-1.xx&_nc_gid=v4J5wpqOYIfA7O4UlZawTg&oh=00_AfUsfkJVFek8hvVA9N1yEV7qTLxEvuKC2ZjlHHp7NNgeiw&oe=68AA3A45" alt="Profil" />
+      </div>
+    </a>
+  </nav>
+  
+  <!-- Tag People Modal -->
+  <div class="modal fade" id="tagPeopleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Identifier des personnes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control" placeholder="Rechercher des amis" id="friendSearch">
+          <div class="mt-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="allowTagging">
+              <label class="form-check-label" for="allowTagging">
+                Autoriser les personnes à identifier d'autres personnes
+              </label>
+            </div>
+          </div>
+          <div class="selected-friends mt-3" id="selectedFriends">
+            <!-- Selected friends will appear here -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-primary" id="saveTags">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Location Modal -->
+  <div class="modal fade" id="locationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Ajouter un lieu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="location-search">
+            <input type="text" class="form-control" placeholder="Rechercher un lieu" id="locationSearch">
+            <div class="location-results" id="locationResults" style="display: none;">
+              <div class="location-item"><i class="bi bi-geo-alt"></i> Paris, France</div>
+              <div class="location-item"><i class="bi bi-geo-alt"></i> Lyon, France</div>
+              <div class="location-item"><i class="bi bi-geo-alt"></i> Marseille, France</div>
+              <div class="location-item"><i class="bi bi-geo-alt"></i> Restaurant Le Délicieux</div>
+              <div class="location-item"><i class="bi bi-geo-alt"></i> Cinéma Paradis</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-primary" id="saveLocation">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Feeling/Activity Modal -->
+  <div class="modal fade" id="feelingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Ajouter un sentiment ou une activité</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="feelingTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="feeling-tab" data-bs-toggle="tab" data-bs-target="#feeling" type="button" role="tab">Sentiment</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab">Activité</button>
+            </li>
+          </ul>
+          <div class="tab-content mt-3" id="feelingTabContent">
+            <div class="tab-pane fade show active" id="feeling" role="tabpanel">
+              <div class="feeling-options">
+                <div class="feeling-option" data-feeling="Heureux">😊 Heureux</div>
+                <div class="feeling-option" data-feeling="Triste">😢 Triste</div>
+                <div class="feeling-option" data-feeling="Amoureux">😍 Amoureux</div>
+                <div class="feeling-option" data-feeling="Fatigué">😴 Fatigué</div>
+                <div class="feeling-option" data-feeling="En colère">😠 En colère</div>
+                <div class="feeling-option" data-feeling="Surpris">😲 Surpris</div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="activity" role="tabpanel">
+              <div class="feeling-options">
+                <div class="feeling-option" data-activity="Regarder un film">🎥 Regarder un film</div>
+                <div class="feeling-option" data-activity="Écouter de la musique">🎵 Écouter de la musique</div>
+                <div class="feeling-option" data-activity="Manger">🍕 Manger</div>
+                <div class="feeling-option" data-activity="Boire un café">☕ Boire un café</div>
+                <div class="feeling-option" data-activity="Faire du sport">🏃 Faire du sport</div>
+                <div class="feeling-option" data-activity="Voyager">✈️ Voyager</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-primary" id="saveFeeling">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const postText = document.getElementById('postText');
+    const btnTopPublish = document.getElementById('btnTopPublish');
+    const btnBottomPublish = document.getElementById('btnBottomPublish');
+    const chips = document.querySelectorAll('.chip');
+    const audienceSelect = document.getElementById('audienceSelect');
+    const bgStrip = document.getElementById('bgStrip');
+    const mediaInput = document.getElementById('mediaInput');
+    const customSlider = document.getElementById('customSlider');
+    const mediaInstructions = document.getElementById('mediaInstructions');
+    const taggedUsers = document.getElementById('taggedUsers');
+    const charCounter = document.getElementById('charCounter');
+    
+    // Store post data
+    let postData = {
+      text: '',
+      audience: 'public',
+      media: [],
+      taggedPeople: [],
+      location: null,
+      feeling: null,
+      activity: null,
+      hasBackground: false,
+      hasCharacterLimit: false
+    };
+
+    // Charger les médias depuis le localStorage au chargement de la page
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedMedia = localStorage.getItem('postMedia');
+      if (savedMedia) {
+        const mediaArray = JSON.parse(savedMedia);
+        mediaArray.forEach(media => {
+          // Recréer les fichiers à partir des données sauvegardées
+          const file = dataURLtoFile(media.data, media.name);
+          postData.media.push(file);
+          addMediaToPreview(file, media.data);
+        });
+        updatePublishState();
+      }
+      
+      initSlider();
+    });
+
+    // Fonction pour convertir dataURL en File
+    function dataURLtoFile(dataurl, filename) {
+      const arr = dataurl.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      
+      while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      
+      return new File([u8arr], filename, {type:mime});
+    }
+
+    // Initialiser le slider
+    function initSlider() {
+      const slider = customSlider;
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      // Gestionnaires d'événements pour le glissement tactile/souris
+      slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        slider.classList.add('active');
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      });
+
+      slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        slider.classList.remove('active');
+      });
+
+      slider.addEventListener('mouseup', () => {
+        isDown = false;
+        slider.classList.remove('active');
+      });
+
+      slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 2;
+        slider.scrollLeft = scrollLeft - walk;
+      });
+
+      // Gestionnaires pour les écrans tactiles
+      slider.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      }, { passive: true });
+
+      slider.addEventListener('touchmove', (e) => {
+        if (e.touches.length !== 1) return;
+        const x = e.touches[0].pageX - slider.offsetLeft;
+        const walk = (x - startX) * 2;
+        slider.scrollLeft = scrollLeft - walk;
+      }, { passive: true });
+
+      // Autoplay des vidéos au survol
+      document.querySelectorAll("#customSlider video").forEach(video => {
+        video.addEventListener("mouseenter", () => video.play());
+        video.addEventListener("mouseleave", () => {
+          video.pause();
+          video.currentTime = 0;
+        });
+        
+        // Pour les appareils tactiles
+        video.addEventListener("touchstart", () => {
+          if (video.paused) {
+            video.play();
+          } else {
+            video.pause();
+          }
+        }, { passive: true });
+      });
+    }
+
+    // Auto-resize textarea
+    function autoResizeTextarea() {
+      postText.style.height = 'auto';
+      postText.style.height = (postText.scrollHeight) + 'px';
+      
+      // Also adjust the composer section height
+      const composer = document.querySelector('.composer');
+      composer.style.minHeight = (postText.scrollHeight + 24) + 'px';
+    }
+    
+    // Toggle background strip visibility based on text content
+    function toggleBackgroundStrip() {
+      if (postText.value.trim().length > 0 || postData.media.length > 0) {
+        bgStrip.classList.add('hidden');
+      } else {
+        bgStrip.classList.remove('hidden');
+      }
+    }
+    
+    // Update character counter
+    function updateCharacterCounter() {
+      const textLength = postText.value.length;
+      const maxLength = postData.hasCharacterLimit ? 80 : Infinity;
+      
+      // Show counter only when there's a limit
+      if (postData.hasCharacterLimit) {
+        charCounter.style.display = 'block';
+        charCounter.textContent = `${textLength}/${maxLength}`;
+        
+        // Add warning class if limit is reached
+        if (textLength > maxLength) {
+          charCounter.classList.add('limit-reached');
+        } else {
+          charCounter.classList.remove('limit-reached');
+        }
+      } else {
+        charCounter.style.display = 'none';
+      }
+    }
+    
+    // Enforce character limit
+    function enforceCharacterLimit() {
+      if (postData.hasCharacterLimit) {
+        const maxLength = 80;
+        if (postText.value.length > maxLength) {
+          postText.value = postText.value.substring(0, maxLength);
+        }
+      }
+    }
+    
+    postText.addEventListener('input', function() {
+      enforceCharacterLimit();
+      postData.text = this.value;
+      updatePublishState();
+      autoResizeTextarea();
+      toggleBackgroundStrip();
+      updateCharacterCounter();
+    });
+    
+    // Initialize textarea height
+    autoResizeTextarea();
+
+    function updatePublishState(){
+      const hasContent = postText.value.trim().length > 0 || postData.media.length > 0;
+      btnTopPublish.style.opacity = hasContent ? 1 : .5;
+      btnBottomPublish.disabled = !hasContent;
+    }
+    updatePublishState();
+
+    // Background presets
+    let selectedChip = document.querySelector('.chip.selected');
+    chips.forEach(chip=>{
+      chip.addEventListener('click', ()=>{
+        if(selectedChip){ selectedChip.classList.remove('selected'); }
+        chip.classList.add('selected'); selectedChip = chip;
+
+        const bg = chip.dataset.bg;
+        const area = postText;
+        
+        // Reset styles first
+        area.style.background = 'transparent';
+        area.style.color = '#1c1e21';
+        area.style.padding = '12px';
+        area.style.borderRadius = '12px';
+        area.style.backgroundSize = 'cover';
+        area.style.backgroundPosition = 'center';
+        area.classList.remove('centered');
+        area.style.fontSize = '18px';
+        area.style.fontWeight = 'normal';
+        
+        postData.hasBackground = false;
+        postData.hasCharacterLimit = false;
+
+        if(bg === 'none'){
+          area.style.background = 'transparent';
+          area.style.padding = '8px 2px';
+          area.style.borderRadius = '0';
+        }else if(bg.startsWith('#')){
+          area.style.background = bg;
+          area.style.color = '#fff';
+          area.classList.add('centered');
+          area.style.fontSize = '24px';
+          area.style.fontWeight = '600';
+          postData.hasBackground = true;
+          postData.hasCharacterLimit = true;
+        }else if(bg.startsWith('gradient')){
+          const gradients = {
+            'gradient-1': 'linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d)',
+            'gradient-2': 'linear-gradient(135deg,#7928ca,#ff0080)',
+            'gradient-3': 'linear-gradient(135deg,#0072ff,#00c6ff)',
+            'gradient-4': 'linear-gradient(135deg,#f46b45,#eea849)',
+            'gradient-5': 'linear-gradient(135deg,#834d9b,#d04ed6)'
+          };
+          area.style.background = gradients[bg] || gradients['gradient-1'];
+          area.style.color = '#fff';
+          area.classList.add('centered');
+          area.style.fontSize = '24px';
+          area.style.fontWeight = '600';
+          postData.hasBackground = true;
+          postData.hasCharacterLimit = true;
+        }else if(bg.startsWith('pattern')){
+          if(bg === 'pattern-1'){
+            area.style.background = 
+              'linear-gradient(45deg, #92bde380 25%, transparent 25%, transparent 75%, #92bde380 75%, #92bde380), ' +
+              'linear-gradient(45deg, #92bde380 25%, transparent 25%, transparent 75%, #92bde380 75%, #92bde380)';
+            area.style.backgroundSize = '20px 20px';
+            area.style.backgroundPosition = '0 0, 10px 10px';
+          }else if(bg === 'pattern-2'){
+            area.style.background = 'radial-gradient(circle at 10% 20%, rgba(0, 147, 233, 0.8) 0%, rgba(128, 208, 199, 0.8) 90%)';
+          }
+          area.style.color = '#fff';
+          area.classList.add('centered');
+          area.style.fontSize = '24px';
+          area.style.fontWeight = '600';
+          postData.hasBackground = true;
+          postData.hasCharacterLimit = true;
+        }
+        
+        // Apply character limit if needed
+        enforceCharacterLimit();
+        updateCharacterCounter();
+        
+        // Adjust textarea height after style changes
+        autoResizeTextarea();
+      });
+    });
+
+    // Audience selection
+    audienceSelect.addEventListener('change', function() {
+      postData.audience = this.value;
+    });
+
+    // Media upload
+    mediaInput.addEventListener('change', function(e) {
+      const files = e.target.files;
+      if (!files.length) {
+        // Si l'utilisateur annule la sélection, afficher tous les boutons
+        document.querySelectorAll('.chip').forEach(chip => {
+          chip.style.display = 'block';
+        });
+        return;
+      }
+      
+      // Cacher tous les boutons sauf "Aucun fond"
+      document.querySelectorAll('.chip').forEach(chip => {
+        if (chip.dataset.bg !== 'none') {
+          chip.style.display = 'none';
+        }
+      });
+      
+      // Limiter à 100 médias maximum
+      const remainingSlots = 100 - postData.media.length;
+      const filesToAdd = Array.from(files).slice(0, remainingSlots);
+      
+      if (filesToAdd.length < files.length) {
+        alert(`Vous ne pouvez ajouter que ${remainingSlots} médias supplémentaires (limite de 100).`);
+      }
+      
+      filesToAdd.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          addMediaToPreview(file, e.target.result);
+          postData.media.push(file);
+          
+          // Sauvegarder dans le localStorage
+          saveMediaToLocalStorage();
+        };
+        reader.readAsDataURL(file);
+      });
+      
+      updatePublishState();
+    });
+    
+    // Fonction pour ajouter un média à la prévisualisation
+    function addMediaToPreview(file, dataUrl) {
+      const slideItem = document.createElement('div');
+      slideItem.className = 'slide-item';
+      
+      let mediaElement;
+      if (file.type.startsWith('image/')) {
+        mediaElement = document.createElement('img');
+        mediaElement.src = dataUrl;
+        mediaElement.alt = 'Image sélectionnée';
+      } else if (file.type.startsWith('video/')) {
+        mediaElement = document.createElement('video');
+        mediaElement.src = dataUrl;
+        mediaElement.controls = true;
+        mediaElement.muted = true;
+        
+        // Ajouter l'indicateur de durée
+        const durationElement = document.createElement('div');
+        durationElement.className = 'video-duration';
+        durationElement.textContent = '0:00';
+        
+        // Mettre à jour la durée une fois les métadonnées chargées
+        mediaElement.addEventListener('loadedmetadata', function() {
+          const duration = Math.floor(mediaElement.duration);
+          const minutes = Math.floor(duration / 60);
+          const seconds = duration % 60;
+          durationElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        });
+        
+        slideItem.appendChild(durationElement);
+      }
+      
+      // Actions (modifier et supprimer)
+      const actions = document.createElement('div');
+      actions.className = 'slide-actions';
+      
+      const editBtn = document.createElement('button');
+      editBtn.title = 'Modifier';
+      editBtn.innerHTML = '✏️';
+      editBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        // Fonctionnalité d'édition à implémenter
+        alert('Fonctionnalité d\'édition à venir');
+      });
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.title = 'Supprimer';
+      deleteBtn.innerHTML = '🗑️';
+      deleteBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        // Supprimer le média
+        const index = Array.from(customSlider.children).indexOf(slideItem);
+        if (index !== -1) {
+          postData.media.splice(index, 1);
+          slideItem.remove();
+          
+          // Sauvegarder dans le localStorage
+          saveMediaToLocalStorage();
+          
+          // Si plus de médias, afficher tous les boutons
+          if (postData.media.length === 0) {
+            document.querySelectorAll('.chip').forEach(chip => {
+              chip.style.display = 'block';
+            });
+          }
+          
+          updatePublishState();
+        }
+      });
+      
+      actions.appendChild(editBtn);
+      actions.appendChild(deleteBtn);
+      
+      slideItem.appendChild(mediaElement);
+      slideItem.appendChild(actions);
+      customSlider.appendChild(slideItem);
+      
+      // Afficher les instructions si des médias sont présents
+      if (customSlider.children.length > 0) {
+        mediaInstructions.style.display = 'block';
+      }
+      
+      // Réinitialiser le slider
+      initSlider();
+    }
+    
+    // Sauvegarder les médias dans le localStorage
+    function saveMediaToLocalStorage() {
+      const mediaToSave = [];
+      
+      // Convertir chaque média en data URL pour le stockage
+      const saveNextMedia = (index) => {
+        if (index >= postData.media.length) {
+          localStorage.setItem('postMedia', JSON.stringify(mediaToSave));
+          return;
+        }
+        
+        const file = postData.media[index];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          mediaToSave.push({
+            name: file.name,
+            type: file.type,
+            data: e.target.result
+          });
+          saveNextMedia(index + 1);
+        };
+        reader.readAsDataURL(file);
+      };
+      
+      saveNextMedia(0);
+    }
+    
+    // Tag people functionality
+    document.getElementById('saveTags').addEventListener('click', function() {
+      // In a real app, this would save the selected friends
+      const selectedFriends = ['Jean Dupont', 'Marie Martin']; // Example data
+      postData.taggedPeople = selectedFriends;
+      
+      // Update UI
+      taggedUsers.innerHTML = '';
+      selectedFriends.forEach(friend => {
+        const badge = document.createElement('div');
+        badge.className = 'tag-badge';
+        badge.innerHTML = `${friend} <span class="remove-tag"><i class="bi bi-x"></i></span>`;
+        taggedUsers.appendChild(badge);
+      });
+      
+      // Close modal
+      bootstrap.Modal.getInstance(document.getElementById('tagPeopleModal')).hide();
+    });
+    
+    // Location functionality
+    const locationSearch = document.getElementById('locationSearch');
+    const locationResults = document.getElementById('locationResults');
+    
+    locationSearch.addEventListener('focus', function() {
+      locationResults.style.display = 'block';
+    });
+    
+    locationSearch.addEventListener('blur', function() {
+      setTimeout(() => {
+        locationResults.style.display = 'none';
+      }, 200);
+    });
+    
+    document.querySelectorAll('.location-item').forEach(item => {
+      item.addEventListener('click', function() {
+        locationSearch.value = this.textContent;
+        postData.location = this.textContent;
+        locationResults.style.display = 'none';
+      });
+    });
+    
+    document.getElementById('saveLocation').addEventListener('click', function() {
+      // In a real app, this would save the location
+      bootstrap.Modal.getInstance(document.getElementById('locationModal')).hide();
+    });
+    
+    // Feeling/Activity functionality
+    let selectedFeeling = null;
+    let selectedActivity = null;
+    
+    document.querySelectorAll('.feeling-option').forEach(option => {
+      option.addEventListener('click', function() {
+        // Remove previous selection
+        document.querySelectorAll('.feeling-option').forEach(opt => {
+          opt.style.backgroundColor = '';
+          opt.style.borderColor = '#e4e6eb';
+        });
+        
+        // Highlight selected
+        this.style.backgroundColor = '#e7f3ff';
+        this.style.borderColor = 'var(--pure-blue)';
+        
+        if (this.dataset.feeling) {
+          selectedFeeling = this.dataset.feeling;
+          selectedActivity = null;
+        } else if (this.dataset.activity) {
+          selectedActivity = this.dataset.activity;
+          selectedFeeling = null;
+        }
+      });
+    });
+    
+    document.getElementById('saveFeeling').addEventListener('click', function() {
+      postData.feeling = selectedFeeling;
+      postData.activity = selectedActivity;
+      bootstrap.Modal.getInstance(document.getElementById('feelingModal')).hide();
+    });
+
+    // Publish
+    function publish(){
+      if(!postData.text.trim() && postData.media.length === 0){ 
+        alert('Votre publication est vide.'); 
+        return; 
+      }
+      
+      // Check character limit
+      if (postData.hasCharacterLimit && postData.text.length > 100) {
+        alert('Votre texte dépasse la limite de 80 caractères pour les publications avec fond coloré.');
+        return;
+      }
+      
+      // In a real app, this would send the data to a server
+      console.log('Publishing:', postData);
+      alert('Publication envoyée !');
+      
+      // Reset form
+      postText.value = '';
+      postText.removeAttribute('style');
+      postText.classList.remove('centered');
+      customSlider.innerHTML = '';
+      mediaInstructions.style.display = 'none';
+      taggedUsers.innerHTML = '';
+      postData = {
+        text: '',
+        audience: 'public',
+        media: [],
+        taggedPeople: [],
+        location: null,
+        feeling: null,
+        activity: null,
+        hasBackground: false,
+        hasCharacterLimit: false
+      };
+      
+      // Reset audience select
+      audienceSelect.value = 'public';
+      
+      // Reset background chips
+      chips.forEach(c=>c.classList.remove('selected'));
+      const first = document.querySelector('.chip[data-bg="none"]');
+      first.classList.add('selected');
+      
+      // Afficher tous les boutons
+      document.querySelectorAll('.chip').forEach(chip => {
+        chip.style.display = 'block';
+      });
+      
+      // Hide character counter
+      charCounter.style.display = 'none';
+      
+      // Show background strip again
+      bgStrip.classList.remove('hidden');
+      
+      // Supprimer les médias du localStorage
+      localStorage.removeItem('postMedia');
+      
+      updatePublishState();
+      autoResizeTextarea();
+    }
+    btnTopPublish.addEventListener('click', publish);
+    btnBottomPublish.addEventListener('click', publish);
+
+    // Back button
+    document.getElementById('btnBack').addEventListener('click', ()=>history.back());
+  </script>
+</body>
+</html>
