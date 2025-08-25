@@ -842,7 +842,7 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
+<script>
     const postText = document.getElementById('postText');
     const btnTopPublish = document.getElementById('btnTopPublish');
     const btnBottomPublish = document.getElementById('btnBottomPublish');
@@ -879,6 +879,16 @@
           postData.media.push(file);
           addMediaToPreview(file, media.data);
         });
+        
+        // Cacher les boutons de couleur après le chargement des médias
+        if (postData.media.length > 0) {
+          document.querySelectorAll('.chip').forEach(chip => {
+            if (chip.dataset.bg !== 'none') {
+              chip.style.display = 'none';
+            }
+          });
+        }
+        
         updatePublishState();
       }
       
@@ -1121,10 +1131,12 @@
     mediaInput.addEventListener('change', function(e) {
       const files = e.target.files;
       if (!files.length) {
-        // Si l'utilisateur annule la sélection, afficher tous les boutons
-        document.querySelectorAll('.chip').forEach(chip => {
-          chip.style.display = 'block';
-        });
+        // Si l'utilisateur annule la sélection, afficher tous les boutons seulement s'il n'y a pas de médias
+        if (postData.media.length === 0) {
+          document.querySelectorAll('.chip').forEach(chip => {
+            chip.style.display = 'block';
+          });
+        }
         return;
       }
       
